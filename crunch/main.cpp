@@ -198,6 +198,7 @@ static int GetPadding(const string& str)
     return 1;
 }
 
+// TODO: Review main function
 int main(int argc, const char* argv[])
 {
     //Print out passed arguments
