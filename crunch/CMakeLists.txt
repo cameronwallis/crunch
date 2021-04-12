@@ -4,8 +4,8 @@ file(GLOB SOURCES "*.cpp")
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 target_compile_options(${PROJECT_NAME} PRIVATE
-    -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Woverloaded-virtual
-    -pedantic -fno-rtti -fPIE -fstack-protector-all
+    -Wall -Wextra -Wpedantic -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Woverloaded-virtual
+    -pedantic -fno-rtti -fPIE -fstack-protector-all -g
 )
 
 
