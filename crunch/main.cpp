@@ -62,6 +62,7 @@
  */
 
 #include <iostream>
+#include <filesystem>
 #include <fstream>
 #include <streambuf>
 #include <sstream>
@@ -91,48 +92,12 @@ static bool optRotate;
 static std::vector<Bitmap*> bitmaps;
 static std::vector<Packer*> packers;
 
-static void SplitFileName(const std::string& path, std::string* dir, std::string* name, std::string* ext)
-{
-    size_t si = path.rfind('/') + 1;
-    if (si == std::string::npos)
-        si = 0;
-    size_t di = path.rfind('.');
-    if (dir != nullptr)
-    {
-        if (si > 0)
-            *dir = path.substr(0, si);
-        else
-            *dir = "";
-    }
-    if (name != nullptr)
-    {
-        if (di != std::string::npos)
-            *name = path.substr(si, di - si);
-        else
-            *name = path.substr(si);
-    }
-    if (ext != nullptr)
-    {
-        if (di != std::string::npos)
-            *ext = path.substr(di);
-        else
-            *ext = "";
-    }
-}
-
-static std::string GetFileName(const std::string& path)
-{
-    std::string name;
-    SplitFileName(path, nullptr, &name, nullptr);
-    return name;
-}
-
-static void LoadBitmap(const std::string& prefix, const std::string& path)
+static void LoadBitmap(const std::string& prefix, const std::filesystem::path& path)
 {
     if (optVerbose)
-        std::cout << '\t' << PathToStr(path) << std::endl;
+        std::cout << '\t' << path << std::endl;
     
-    bitmaps.push_back(new Bitmap(PathToStr(path), prefix + GetFileName(PathToStr(path)), optPremultiply, optTrim));
+    bitmaps.push_back(new Bitmap(PathToStr(path), prefix + path.stem().string(), optPremultiply, optTrim));
 }
 
 static void LoadBitmaps(const std::string& root, const std::string& prefix)
@@ -211,10 +176,12 @@ int main(int argc, const char* argv[])
         std::cerr << "invalid input, expected: \"crunch [INPUT DIRECTORY] [OUTPUT PREFIX] [OPTIONS...]\"" << std::endl;
         return EXIT_FAILURE;
     }
+
+    const std::filesystem::path fullpath(argv[1]);
     
     //Get the output directory and name
-    std::string outputDir, name;
-    SplitFileName(argv[1], &outputDir, &name, nullptr);
+    std::string outputDir = fullpath.parent_path();
+    std::string name = fullpath.stem();
     
     //Get all the input files and directories
     std:: vector<std::string> inputs;
