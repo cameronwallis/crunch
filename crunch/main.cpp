@@ -180,8 +180,8 @@ int main(int argc, const char* argv[])
     const std::filesystem::path fullpath(argv[1]);
     
     //Get the output directory and name
-    std::string outputDir = fullpath.parent_path();
-    std::string name = fullpath.stem();
+    const std::string outputDir = fullpath.parent_path();
+    const std::string name = fullpath.stem();
     
     //Get all the input files and directories
     std:: vector<std::string> inputs;
@@ -315,7 +315,7 @@ int main(int argc, const char* argv[])
     
     //Sort the bitmaps by area
     sort(bitmaps.begin(), bitmaps.end(), [](const Bitmap* a, const Bitmap* b) {
-        return (a->width * a->height) < (b->width * b->height);
+        return (a->m_width * a->m_height) < (b->m_width * b->m_height);
     });
     
     //Pack the bitmaps
@@ -327,11 +327,11 @@ int main(int argc, const char* argv[])
         packer->Pack(bitmaps, optVerbose, optUnique, optRotate);
         packers.push_back(packer);
         if (optVerbose)
-            std::cout << "finished packing: " << name << std::to_string(packers.size() - 1) << " (" << packer->width << " x " << packer->height << ')' << std::endl;
+            std::cout << "finished packing: " << name << std::to_string(packers.size() - 1) << " (" << packer->m_width << " x " << packer->m_height << ')' << std::endl;
     
-        if (packer->bitmaps.empty())
+        if (packer->m_bitmaps.empty())
         {
-            std::cerr << "packing failed, could not fit bitmap: " << (bitmaps.back())->name << std::endl;
+            std::cerr << "packing failed, could not fit bitmap: " << (bitmaps.back())->m_name << std::endl;
             return EXIT_FAILURE;
         }
     }
@@ -351,7 +351,7 @@ int main(int argc, const char* argv[])
             std::cout << "writing bin: " << outputDir << name << ".bin" << std::endl;
         
         std::ofstream bin(outputDir + name + ".bin", std::ios::binary);
-        WriteShort(bin, (int16_t)packers.size());
+        WriteShort(bin, static_cast<int16_t>(packers.size()));
         for (size_t i = 0; i < packers.size(); ++i)
             packers[i]->SaveBin(name + std::to_string(i), bin, optTrim, optRotate);
         bin.close();
