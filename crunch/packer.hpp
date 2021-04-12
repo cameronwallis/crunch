@@ -44,13 +44,13 @@ struct Point
 
 struct Packer
 {
-    int width;
-    int height;
-    int pad;
+    int m_width;
+    int m_height;
+    int m_pad;
     
-    std::vector<Bitmap*> bitmaps;
-    std::vector<Point> points;
-    std::unordered_map<size_t, int> dupLookup;
+    std::vector<Bitmap*> m_bitmaps;
+    std::vector<Point> m_points;
+    std::unordered_map<size_t, int> m_dupLookup;
     
     Packer(int width, int height, int pad);
     void Pack(std::vector<Bitmap*>& bitmaps, bool verbose, bool unique, bool rotate);

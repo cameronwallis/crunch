@@ -35,15 +35,15 @@
 
 struct Bitmap
 {
-    std::string name;
-    int width;
-    int height;
-    int frameX;
-    int frameY;
-    int frameW;
-    int frameH;
-    uint32_t* data;
-    size_t hashValue;
+    std::string m_name;
+    int m_width;
+    int m_height;
+    int m_frameX;
+    int m_frameY;
+    int m_frameW;
+    int m_frameH;
+    uint32_t* m_data;
+    size_t m_hashValue;
     Bitmap(const std::string& file, const std::string& name, bool premultiply, bool trim);
     Bitmap(int width, int height);
     ~Bitmap();

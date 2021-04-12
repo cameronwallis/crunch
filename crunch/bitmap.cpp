@@ -34,7 +34,7 @@
 //using namespace std;
 
 Bitmap::Bitmap(const std::string& file, const std::string& name, bool premultiply, bool trim)
-: name(name)
+: m_name(name)
 {
     //Load the png file
     unsigned char* pdata;
@@ -108,57 +108,57 @@ Bitmap::Bitmap(const std::string& file, const std::string& name, bool premultipl
     }
     
     //Calculate our trimmed size
-    width = (maxX - minX) + 1;
-    height = (maxY - minY) + 1;
-    frameW = w;
-    frameH = h;
+    m_width = (maxX - minX) + 1;
+    m_height = (maxY - minY) + 1;
+    m_frameW = w;
+    m_frameH = h;
     
-    if (width == w && height == h)
+    if (m_width == w && m_height == h)
     {
         //If we aren't trimmed, use the loaded image data
-        frameX = 0;
-        frameY = 0;
-        data = pixels;
+        m_frameX = 0;
+        m_frameY = 0;
+        m_data = pixels;
     }
     else
     {
         //Create the trimmed image data
-        data = reinterpret_cast<uint32_t*>(calloc(width * height, sizeof(uint32_t)));
-        frameX = -minX;
-        frameY = -minY;
+        m_data = reinterpret_cast<uint32_t*>(calloc(m_width * m_height, sizeof(uint32_t)));
+        m_frameX = -minX;
+        m_frameY = -minY;
         
         //Copy trimmed pixels over to the trimmed pixel array
         for (int y = minY; y <= maxY; ++y)
             for (int x = minX; x <= maxX; ++x)
-                data[(y - minY) * width + (x - minX)] = pixels[y * w + x];
+                m_data[(y - minY) * m_width + (x - minX)] = pixels[y * w + x];
         
         //Free the untrimmed pixels
         free(pixels);
     }
     
     //Generate a hash for the bitmap
-    hashValue = 0;
-    HashCombine(hashValue, static_cast<size_t>(width));
-    HashCombine(hashValue, static_cast<size_t>(height));
-    HashData(hashValue, reinterpret_cast<char*>(data), sizeof(uint32_t) * width * height);
+    m_hashValue = 0;
+    HashCombine(m_hashValue, static_cast<size_t>(m_width));
+    HashCombine(m_hashValue, static_cast<size_t>(m_height));
+    HashData(m_hashValue, reinterpret_cast<char*>(m_data), sizeof(uint32_t) * m_width * m_height);
 }
 
 Bitmap::Bitmap(int width, int height)
-: width(width), height(height)
+: m_width(width), m_height(height)
 {
-    data = reinterpret_cast<uint32_t*>(calloc(width * height, sizeof(uint32_t)));
+    m_data = reinterpret_cast<uint32_t*>(calloc(width * height, sizeof(uint32_t)));
 }
 
 Bitmap::~Bitmap()
 {
-    free(data);
+    free(m_data);
 }
 
 void Bitmap::SaveAs(const std::string& file)
 {
-    unsigned char* pdata = reinterpret_cast<unsigned char*>(data);
-    unsigned int pw = static_cast<unsigned int>(width);
-    unsigned int ph = static_cast<unsigned int>(height);
+    unsigned char* pdata = reinterpret_cast<unsigned char*>(m_data);
+    unsigned int pw = static_cast<unsigned int>(m_width);
+    unsigned int ph = static_cast<unsigned int>(m_height);
     if (lodepng_encode32_file(file.data(), pdata, pw, ph))
     {
         std::cout << "failed to save png: " << file << std::endl;
@@ -168,22 +168,22 @@ void Bitmap::SaveAs(const std::string& file)
 
 void Bitmap::CopyPixels(const Bitmap* src, int tx, int ty)
 {
-    for (int y = 0; y < src->height; ++y)
-        for (int x = 0; x < src->width; ++x)
-            data[(ty + y) * width + (tx + x)] = src->data[y * src->width + x];
+    for (int y = 0; y < src->m_height; ++y)
+        for (int x = 0; x < src->m_width; ++x)
+            m_data[(ty + y) * m_width + (tx + x)] = src->m_data[y * src->m_width + x];
 }
 
 void Bitmap::CopyPixelsRot(const Bitmap* src, int tx, int ty)
 {
-    int r = src->height - 1;
-    for (int y = 0; y < src->width; ++y)
-        for (int x = 0; x < src->height; ++x)
-            data[(ty + y) * width + (tx + x)] = src->data[(r - x) * src->width + y];
+    int r = src->m_height - 1;
+    for (int y = 0; y < src->m_width; ++y)
+        for (int x = 0; x < src->m_height; ++x)
+            m_data[(ty + y) * m_width + (tx + x)] = src->m_data[(r - x) * src->m_width + y];
 }
 
 bool Bitmap::Equals(const Bitmap* other) const
 {
-    if (width == other->width && height == other->height)
-        return memcmp(data, other->data, sizeof(uint32_t) * width * height) == 0;
+    if (m_width == other->m_width && m_height == other->m_height)
+        return memcmp(m_data, other->m_data, sizeof(uint32_t) * m_width * m_height) == 0;
     return false;
 }
