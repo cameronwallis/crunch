@@ -1,5 +1,5 @@
 /** @file GuillotineBinPack.cpp
-	@author Jukka Jylänki
+	@author Jukka Jylï¿½nki
 
 	@brief Implements different bin packer algorithms that use the GUILLOTINE data structure.
 
@@ -18,7 +18,7 @@
 
 namespace rbp {
 
-using namespace std;
+//using namespace std;
 
 GuillotineBinPack::GuillotineBinPack()
 :binWidth(0),
@@ -401,7 +401,7 @@ int GuillotineBinPack::ScoreBestShortSideFit(int width, int height, const Rect &
 {
 	int leftoverHoriz = abs(freeRect.width - width);
 	int leftoverVert = abs(freeRect.height - height);
-	int leftover = min(leftoverHoriz, leftoverVert);
+	int leftover = std::min(leftoverHoriz, leftoverVert);
 	return leftover;
 }
 
@@ -409,7 +409,7 @@ int GuillotineBinPack::ScoreBestLongSideFit(int width, int height, const Rect &f
 {
 	int leftoverHoriz = abs(freeRect.width - width);
 	int leftoverVert = abs(freeRect.height - height);
-	int leftover = max(leftoverHoriz, leftoverVert);
+	int leftover = std::max(leftoverHoriz, leftoverVert);
 	return leftover;
 }
 

@@ -31,9 +31,9 @@
 #include <algorithm>
 #include "hash.hpp"
 
-using namespace std;
+//using namespace std;
 
-Bitmap::Bitmap(const string& file, const string& name, bool premultiply, bool trim)
+Bitmap::Bitmap(const std::string& file, const std::string& name, bool premultiply, bool trim)
 : name(name)
 {
     //Load the png file
@@ -41,7 +41,7 @@ Bitmap::Bitmap(const string& file, const string& name, bool premultiply, bool tr
     unsigned int pw, ph;
     if (lodepng_decode32_file(&pdata, &pw, &ph, file.data()))
     {
-        cerr << "failed to load png: " << file << endl;
+        std::cerr << "failed to load png: " << file << std::endl;
         exit(EXIT_FAILURE);
     }
     int w = static_cast<int>(pw);
@@ -83,10 +83,10 @@ Bitmap::Bitmap(const string& file, const string& name, bool premultiply, bool tr
                 p = pixels[y * w + x];
                 if ((p >> 24) > 0)
                 {
-                    minX = min(x, minX);
-                    minY = min(y, minY);
-                    maxX = max(x, maxX);
-                    maxY = max(y, maxY);
+                    minX = std::min(x, minX);
+                    minY = std::min(y, minY);
+                    maxX = std::max(x, maxX);
+                    maxY = std::max(y, maxY);
                 }
             }
         }
@@ -96,7 +96,7 @@ Bitmap::Bitmap(const string& file, const string& name, bool premultiply, bool tr
             minY = 0;
             maxX = w - 1;
             maxY = h - 1;
-            cout << "image is completely transparent: " << file << endl;
+            std::cout << "image is completely transparent: " << file << std::endl;
         }
     }
     else
@@ -154,14 +154,14 @@ Bitmap::~Bitmap()
     free(data);
 }
 
-void Bitmap::SaveAs(const string& file)
+void Bitmap::SaveAs(const std::string& file)
 {
     unsigned char* pdata = reinterpret_cast<unsigned char*>(data);
     unsigned int pw = static_cast<unsigned int>(width);
     unsigned int ph = static_cast<unsigned int>(height);
     if (lodepng_encode32_file(file.data(), pdata, pw, ph))
     {
-        cout << "failed to save png: " << file << endl;
+        std::cout << "failed to save png: " << file << std::endl;
         exit(EXIT_FAILURE);
     }
 }

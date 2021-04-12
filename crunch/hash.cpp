@@ -43,31 +43,31 @@ void HashCombine(std::size_t& hash, size_t v)
     hash ^= v + 0x9e3779b9 + (hash<<6) + (hash>>2);
 }
 
-void HashString(size_t& hash, const string& str)
+void HashString(size_t& hash, const std::string& str)
 {
     HashCombine(hash, str);
 }
 
-void HashFile(size_t& hash, const string& file)
+void HashFile(size_t& hash, const std::string& file)
 {
-    ifstream stream(file, ios::binary | ios::ate);
-    streamsize size = stream.tellg();
-    stream.seekg(0, ios::beg);
-    vector<char> buffer(size + 1);
+    std::ifstream stream(file, std::ios::binary | std::ios::ate);
+    std::streamsize size = stream.tellg();
+    stream.seekg(0, std::ios::beg);
+    std::vector<char> buffer(size + 1);
     if (!stream.read(buffer.data(), size))
     {
-        cerr << "failed to read file: " << file << endl;
+        std::cerr << "failed to read file: " << file << std::endl;
         exit(EXIT_FAILURE);
     }
     buffer[size] = '\0';
-    string text(buffer.begin(), buffer.end());
+    std::string text(buffer.begin(), buffer.end());
     HashCombine(hash, text);
 }
 
-void HashFiles(size_t& hash, const string& root)
+void HashFiles(size_t& hash, const std::string& root)
 {
-    static string dot1 = ".";
-    static string dot2 = "..";
+    static std::string dot1 = ".";
+    static std::string dot2 = "..";
     
     tinydir_dir dir;
     tinydir_open(&dir, StrToPath(root).data());
@@ -93,16 +93,16 @@ void HashFiles(size_t& hash, const string& root)
 
 void HashData(size_t& hash, const char* data, size_t size)
 {
-    string str(data, size);
+    std::string str(data, size);
     HashCombine(hash, str);
 }
 
-bool LoadHash(size_t& hash, const string& file)
+bool LoadHash(size_t& hash, const std::string& file)
 {
-    ifstream stream(file);
+    std::ifstream stream(file);
     if (stream)
     {
-        stringstream ss;
+        std::stringstream ss;
         ss << stream.rdbuf();
         ss >> hash;
         return true;
@@ -110,8 +110,8 @@ bool LoadHash(size_t& hash, const string& file)
     return false;
 }
 
-void SaveHash(size_t hash, const string& file)
+void SaveHash(size_t hash, const std::string& file)
 {
-    ofstream stream(file);
+    std::ofstream stream(file);
     stream << hash;
 }

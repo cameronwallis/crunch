@@ -1,5 +1,5 @@
 /** @file Rect.cpp
-	@author Jukka Jylänki
+	@author Jukka Jylï¿½nki
 
 	This work is released to Public Domain, do whatever you want with it.
 */
@@ -14,7 +14,7 @@ namespace rbp {
 
 int CompareRectShortSide(const Rect &a, const Rect &b)
 {
-	using namespace std;
+	//using namespace std;
 
 	int smallerSideA = min(a.width, a.height);
 	int smallerSideB = min(b.width, b.height);

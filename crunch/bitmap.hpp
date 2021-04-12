@@ -31,11 +31,11 @@
 #include <cstdint>
 #include <vector>
 
-using namespace std;
+//using namespace std;
 
 struct Bitmap
 {
-    string name;
+    std::string name;
     int width;
     int height;
     int frameX;
@@ -44,10 +44,10 @@ struct Bitmap
     int frameH;
     uint32_t* data;
     size_t hashValue;
-    Bitmap(const string& file, const string& name, bool premultiply, bool trim);
+    Bitmap(const std::string& file, const std::string& name, bool premultiply, bool trim);
     Bitmap(int width, int height);
     ~Bitmap();
-    void SaveAs(const string& file);
+    void SaveAs(const std::string& file);
     void CopyPixels(const Bitmap* src, int tx, int ty);
     void CopyPixelsRot(const Bitmap* src, int tx, int ty);
     bool Equals(const Bitmap* other) const;

@@ -28,16 +28,16 @@
 #define str_hpp
 
 #include <string>
-using namespace std;
+//using namespace std;
 
 #if defined _MSC_VER || defined __MINGW32__
 #include <locale>
 #include <codecvt>
-wstring StrToPath(const string& str);
-string PathToStr(const wstring& str);
+std::wstring StrToPath(const std::string& str);
+std::string PathToStr(const std::wstring& str);
 #else
-const string& StrToPath(const string& str);
-const string& PathToStr(const string& str);
+const std::string& StrToPath(const std::string& str);
+const std::string& PathToStr(const std::string& str);
 #endif
 
 #endif

@@ -29,22 +29,22 @@
 #if defined _MSC_VER || defined __MINGW32__
 #include <locale>
 #include <codecvt>
-wstring StrToPath(const string& str)
+std::wstring StrToPath(const std::string& str)
 {
     std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
     return converter.from_bytes(str);
 }
-string PathToStr(const wstring& str)
+std::string PathToStr(const std::wstring& str)
 {
     std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
     return converter.to_bytes(str);
 }
 #else
-const string& StrToPath(const string& str)
+const std::string& StrToPath(const std::string& str)
 {
     return str;
 }
-const string& PathToStr(const string& str)
+const std::string& PathToStr(const std::string& str)
 {
     return str;
 }

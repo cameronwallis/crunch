@@ -32,7 +32,7 @@
 #include <unordered_map>
 #include "bitmap.hpp"
 
-using namespace std;
+//using namespace std;
 
 struct Point
 {
@@ -48,16 +48,16 @@ struct Packer
     int height;
     int pad;
     
-    vector<Bitmap*> bitmaps;
-    vector<Point> points;
-    unordered_map<size_t, int> dupLookup;
+    std::vector<Bitmap*> bitmaps;
+    std::vector<Point> points;
+    std::unordered_map<size_t, int> dupLookup;
     
     Packer(int width, int height, int pad);
-    void Pack(vector<Bitmap*>& bitmaps, bool verbose, bool unique, bool rotate);
-    void SavePng(const string& file);
-    void SaveXml(const string& name, ofstream& xml, bool trim, bool rotate);
-    void SaveBin(const string& name, ofstream& bin, bool trim, bool rotate);
-    void SaveJson(const string& name, ofstream& json, bool trim, bool rotate);
+    void Pack(std::vector<Bitmap*>& bitmaps, bool verbose, bool unique, bool rotate);
+    void SavePng(const std::string& file);
+    void SaveXml(const std::string& name, std::ofstream& xml, bool trim, bool rotate);
+    void SaveBin(const std::string& name, std::ofstream& bin, bool trim, bool rotate);
+    void SaveJson(const std::string& name,std::ofstream& json, bool trim, bool rotate);
 };
 
 #endif

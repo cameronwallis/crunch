@@ -1,5 +1,5 @@
 /** @file MaxRectsBinPack.cpp
-	@author Jukka Jylänki
+	@author Jukka Jylï¿½nki
 
 	@brief Implements different bin packer algorithms that use the MAXRECTS data structure.
 
@@ -18,7 +18,7 @@
 
 namespace rbp {
 
-using namespace std;
+//using namespace std;
 
 MaxRectsBinPack::MaxRectsBinPack()
 :binWidth(0),
@@ -232,8 +232,8 @@ Rect MaxRectsBinPack::FindPositionForNewNodeBestShortSideFit(bool rot, int width
 		{
 			int leftoverHoriz = abs(freeRectangles[i].width - width);
 			int leftoverVert = abs(freeRectangles[i].height - height);
-			int shortSideFit = min(leftoverHoriz, leftoverVert);
-			int longSideFit = max(leftoverHoriz, leftoverVert);
+			int shortSideFit = std::min(leftoverHoriz, leftoverVert);
+			int longSideFit = std::max(leftoverHoriz, leftoverVert);
 
 			if (shortSideFit < bestShortSideFit || (shortSideFit == bestShortSideFit && longSideFit < bestLongSideFit))
 			{
@@ -252,8 +252,8 @@ Rect MaxRectsBinPack::FindPositionForNewNodeBestShortSideFit(bool rot, int width
             {
                 int flippedLeftoverHoriz = abs(freeRectangles[i].width - height);
                 int flippedLeftoverVert = abs(freeRectangles[i].height - width);
-                int flippedShortSideFit = min(flippedLeftoverHoriz, flippedLeftoverVert);
-                int flippedLongSideFit = max(flippedLeftoverHoriz, flippedLeftoverVert);
+                int flippedShortSideFit = std::min(flippedLeftoverHoriz, flippedLeftoverVert);
+                int flippedLongSideFit = std::max(flippedLeftoverHoriz, flippedLeftoverVert);
 
                 if (flippedShortSideFit < bestShortSideFit || (flippedShortSideFit == bestShortSideFit && flippedLongSideFit < bestLongSideFit))
                 {
@@ -286,8 +286,8 @@ Rect MaxRectsBinPack::FindPositionForNewNodeBestLongSideFit(bool rot, int width,
 		{
 			int leftoverHoriz = abs(freeRectangles[i].width - width);
 			int leftoverVert = abs(freeRectangles[i].height - height);
-			int shortSideFit = min(leftoverHoriz, leftoverVert);
-			int longSideFit = max(leftoverHoriz, leftoverVert);
+			int shortSideFit = std::min(leftoverHoriz, leftoverVert);
+			int longSideFit = std::max(leftoverHoriz, leftoverVert);
 
 			if (longSideFit < bestLongSideFit || (longSideFit == bestLongSideFit && shortSideFit < bestShortSideFit))
 			{
@@ -306,8 +306,8 @@ Rect MaxRectsBinPack::FindPositionForNewNodeBestLongSideFit(bool rot, int width,
             {
                 int leftoverHoriz = abs(freeRectangles[i].width - height);
                 int leftoverVert = abs(freeRectangles[i].height - width);
-                int shortSideFit = min(leftoverHoriz, leftoverVert);
-                int longSideFit = max(leftoverHoriz, leftoverVert);
+                int shortSideFit = std::min(leftoverHoriz, leftoverVert);
+                int longSideFit = std::max(leftoverHoriz, leftoverVert);
                 
                 if (longSideFit < bestLongSideFit || (longSideFit == bestLongSideFit && shortSideFit < bestShortSideFit))
                 {
@@ -342,7 +342,7 @@ Rect MaxRectsBinPack::FindPositionForNewNodeBestAreaFit(bool rot, int width, int
 		{
 			int leftoverHoriz = abs(freeRectangles[i].width - width);
 			int leftoverVert = abs(freeRectangles[i].height - height);
-			int shortSideFit = min(leftoverHoriz, leftoverVert);
+			int shortSideFit = std::min(leftoverHoriz, leftoverVert);
 
 			if (areaFit < bestAreaFit || (areaFit == bestAreaFit && shortSideFit < bestShortSideFit))
 			{
@@ -361,7 +361,7 @@ Rect MaxRectsBinPack::FindPositionForNewNodeBestAreaFit(bool rot, int width, int
             {
                 int leftoverHoriz = abs(freeRectangles[i].width - height);
                 int leftoverVert = abs(freeRectangles[i].height - width);
-                int shortSideFit = min(leftoverHoriz, leftoverVert);
+                int shortSideFit = std::min(leftoverHoriz, leftoverVert);
                 
                 if (areaFit < bestAreaFit || (areaFit == bestAreaFit && shortSideFit < bestShortSideFit))
                 {
@@ -383,7 +383,7 @@ int CommonIntervalLength(int i1start, int i1end, int i2start, int i2end)
 {
 	if (i1end < i2start || i2end < i1start)
 		return 0;
-	return min(i1end, i2end) - max(i1start, i2start);
+	return std::min(i1end, i2end) - std::max(i1start, i2start);
 }
 
 int MaxRectsBinPack::ContactPointScoreNode(int x, int y, int width, int height) const

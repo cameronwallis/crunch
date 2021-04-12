@@ -30,12 +30,12 @@
 #include <fstream>
 #include <string>
 
-using namespace std;
+//using namespace std;
 
-void WriteString(ofstream& bin, const string& value);
-void WriteShort(ofstream& bin, int16_t value);
-void WriteByte(ofstream& bin, char value);
-string ReadString(ifstream& bin);
-int16_t ReadShort(ifstream& bin);
+void WriteString(std::ofstream& bin, const std::string& value);
+void WriteShort(std::ofstream& bin, int16_t value);
+void WriteByte(std::ofstream& bin, char value);
+std::string ReadString(std::ifstream& bin);
+int16_t ReadShort(std::ifstream& bin);
 
 #endif

@@ -27,23 +27,23 @@
 #include "binary.hpp"
 #include <iostream>
 
-void WriteString(ofstream& bin, const string& value)
+void WriteString(std::ofstream& bin, const std::string& value)
 {
     bin.write(value.data(), value.length() + 1);
 }
 
-void WriteShort(ofstream& bin, int16_t value)
+void WriteShort(std::ofstream& bin, int16_t value)
 {
     bin.put(static_cast<uint8_t>(value & 0xff));
     bin.put(static_cast<uint8_t>((value >> 8) & 0xff));
 }
 
-void WriteByte(ofstream& bin, char value)
+void WriteByte(std::ofstream& bin, char value)
 {
     bin.write(&value, 1);
 }
 
-string ReadString(ifstream& bin)
+std::string ReadString(std::ifstream& bin)
 {
     char data[256];
     bin.read(data, 1);
@@ -53,7 +53,7 @@ string ReadString(ifstream& bin)
     return data;
 }
 
-int16_t ReadShort(ifstream& bin)
+int16_t ReadShort(std::ifstream& bin)
 {
     int16_t value;
     bin.read(reinterpret_cast<char*>(&value), 2);

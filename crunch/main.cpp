@@ -75,7 +75,7 @@
 #include "hash.hpp"
 #include "str.hpp"
 
-using namespace std;
+//using namespace std;
 
 static int optSize;
 static int optPadding;
@@ -88,13 +88,13 @@ static bool optVerbose;
 static bool optForce;
 static bool optUnique;
 static bool optRotate;
-static vector<Bitmap*> bitmaps;
-static vector<Packer*> packers;
+static std::vector<Bitmap*> bitmaps;
+static std::vector<Packer*> packers;
 
-static void SplitFileName(const string& path, string* dir, string* name, string* ext)
+static void SplitFileName(const std::string& path, std::string* dir, std::string* name, std::string* ext)
 {
     size_t si = path.rfind('/') + 1;
-    if (si == string::npos)
+    if (si == std::string::npos)
         si = 0;
     size_t di = path.rfind('.');
     if (dir != nullptr)
@@ -106,39 +106,39 @@ static void SplitFileName(const string& path, string* dir, string* name, string*
     }
     if (name != nullptr)
     {
-        if (di != string::npos)
+        if (di != std::string::npos)
             *name = path.substr(si, di - si);
         else
             *name = path.substr(si);
     }
     if (ext != nullptr)
     {
-        if (di != string::npos)
+        if (di != std::string::npos)
             *ext = path.substr(di);
         else
             *ext = "";
     }
 }
 
-static string GetFileName(const string& path)
+static std::string GetFileName(const std::string& path)
 {
-    string name;
+    std::string name;
     SplitFileName(path, nullptr, &name, nullptr);
     return name;
 }
 
-static void LoadBitmap(const string& prefix, const string& path)
+static void LoadBitmap(const std::string& prefix, const std::string& path)
 {
     if (optVerbose)
-        cout << '\t' << PathToStr(path) << endl;
+        std::cout << '\t' << PathToStr(path) << std::endl;
     
     bitmaps.push_back(new Bitmap(PathToStr(path), prefix + GetFileName(PathToStr(path)), optPremultiply, optTrim));
 }
 
-static void LoadBitmaps(const string& root, const string& prefix)
+static void LoadBitmaps(const std::string& root, const std::string& prefix)
 {
-    static string dot1 = ".";
-    static string dot2 = "..";
+    static std::string dot1 = ".";
+    static std::string dot2 = "..";
     
     tinydir_dir dir;
     tinydir_open(&dir, StrToPath(root).data());
@@ -162,12 +162,12 @@ static void LoadBitmaps(const string& root, const string& prefix)
     tinydir_close(&dir);
 }
 
-static void RemoveFile(string file)
+static void RemoveFile(std::string file)
 {
     remove(file.data());
 }
 
-static int GetPackSize(const string& str)
+static int GetPackSize(const std::string& str)
 {
     if (str == "4096")
         return 4096;
@@ -183,17 +183,17 @@ static int GetPackSize(const string& str)
         return 128;
     if (str == "64")
         return 64;
-    cerr << "invalid size: " << str << endl;
+    std::cerr << "invalid size: " << str << std::endl;
     exit(EXIT_FAILURE);
     return 0;
 }
 
-static int GetPadding(const string& str)
+static int GetPadding(const std::string& str)
 {
     for (int i = 0; i <= 16; ++i)
-        if (str == to_string(i))
+        if (str == std::to_string(i))
             return i;
-    cerr << "invalid padding value: " << str << endl;
+    std::cerr << "invalid padding value: " << str << std::endl;
     exit(EXIT_FAILURE);
     return 1;
 }
@@ -203,25 +203,25 @@ int main(int argc, const char* argv[])
 {
     //Print out passed arguments
     for (int i = 0; i < argc; ++i)
-        cout << argv[i] << ' ';
-    cout << endl;
+        std::cout << argv[i] << ' ';
+    std::cout << std::endl;
     
     if (argc < 3)
     {
-        cerr << "invalid input, expected: \"crunch [INPUT DIRECTORY] [OUTPUT PREFIX] [OPTIONS...]\"" << endl;
+        std::cerr << "invalid input, expected: \"crunch [INPUT DIRECTORY] [OUTPUT PREFIX] [OPTIONS...]\"" << std::endl;
         return EXIT_FAILURE;
     }
     
     //Get the output directory and name
-    string outputDir, name;
+    std::string outputDir, name;
     SplitFileName(argv[1], &outputDir, &name, nullptr);
     
     //Get all the input files and directories
-    vector<string> inputs;
-    stringstream ss(argv[2]);
+    std:: vector<std::string> inputs;
+    std::stringstream ss(argv[2]);
     while (ss.good())
     {
-        string inputStr;
+        std::string inputStr;
         getline(ss, inputStr, ',');
         inputs.push_back(inputStr);
     }
@@ -239,7 +239,7 @@ int main(int argc, const char* argv[])
     optUnique = false;
     for (int i = 3; i < argc; ++i)
     {
-        string arg = argv[i];
+        std::string arg = argv[i];
         if (arg == "-d" || arg == "--default")
             optXml = optPremultiply = optTrim = optUnique = true;
         else if (arg == "-x" || arg == "--xml")
@@ -270,7 +270,7 @@ int main(int argc, const char* argv[])
             optPadding = GetPadding(arg.substr(2));
         else
         {
-            cerr << "unexpected argument: " << arg << endl;
+            std::cerr << "unexpected argument: " << arg << std::endl;
             return EXIT_FAILURE;
         }
     }
@@ -281,7 +281,7 @@ int main(int argc, const char* argv[])
         HashString(newHash, argv[i]);
     for (size_t i = 0; i < inputs.size(); ++i)
     {
-        if (inputs[i].rfind('.') == string::npos)
+        if (inputs[i].rfind('.') == std::string::npos)
             HashFiles(newHash, inputs[i]);
         else
             HashFile(newHash, inputs[i]);
@@ -293,7 +293,7 @@ int main(int argc, const char* argv[])
     {
         if (!optForce && newHash == oldHash)
         {
-            cout << "atlas is unchanged: " << name << endl;
+            std::cout << "atlas is unchanged: " << name << std::endl;
             return EXIT_SUCCESS;
         }
     }
@@ -313,18 +313,18 @@ int main(int argc, const char* argv[])
     
     if (optVerbose)
     {
-        cout << "options..." << endl;
-        cout << "\t--xml: " << (optXml ? "true" : "false") << endl;
-        cout << "\t--binary: " << (optBinary ? "true" : "false") << endl;
-        cout << "\t--json: " << (optJson ? "true" : "false") << endl;
-        cout << "\t--premultiply: " << (optPremultiply ? "true" : "false") << endl;
-        cout << "\t--trim: " << (optTrim ? "true" : "false") << endl;
-        cout << "\t--verbose: " << (optVerbose ? "true" : "false") << endl;
-        cout << "\t--force: " << (optForce ? "true" : "false") << endl;
-        cout << "\t--unique: " << (optUnique ? "true" : "false") << endl;
-        cout << "\t--rotate: " << (optRotate ? "true" : "false") << endl;
-        cout << "\t--size: " << optSize << endl;
-        cout << "\t--pad: " << optPadding << endl;
+        std::cout << "options..." << std::endl;
+        std::cout << "\t--xml: " << (optXml ? "true" : "false") << std::endl;
+        std::cout << "\t--binary: " << (optBinary ? "true" : "false") << std::endl;
+        std::cout << "\t--json: " << (optJson ? "true" : "false") << std::endl;
+        std::cout << "\t--premultiply: " << (optPremultiply ? "true" : "false") << std::endl;
+        std::cout << "\t--trim: " << (optTrim ? "true" : "false") << std::endl;
+        std::cout << "\t--verbose: " << (optVerbose ? "true" : "false") << std::endl;
+        std::cout << "\t--force: " << (optForce ? "true" : "false") << std::endl;
+        std::cout << "\t--unique: " << (optUnique ? "true" : "false") << std::endl;
+        std::cout << "\t--rotate: " << (optRotate ? "true" : "false") << std::endl;
+        std::cout << "\t--size: " << optSize << std::endl;
+        std::cout << "\t--pad: " << optPadding << std::endl;
     }
     
     //Remove old files
@@ -333,14 +333,14 @@ int main(int argc, const char* argv[])
     RemoveFile(outputDir + name + ".xml");
     RemoveFile(outputDir + name + ".json");
     for (size_t i = 0; i < 16; ++i)
-        RemoveFile(outputDir + name + to_string(i) + ".png");
+        RemoveFile(outputDir + name + std::to_string(i) + ".png");
     
     //Load the bitmaps from all the input files and directories
     if (optVerbose)
-        cout << "loading images..." << endl;
+        std::cout << "loading images..." << std::endl;
     for (size_t i = 0; i < inputs.size(); ++i)
     {
-        if (inputs[i].rfind('.') != string::npos)
+        if (inputs[i].rfind('.') != std::string::npos)
             LoadBitmap("", inputs[i]);
         else
             LoadBitmaps(inputs[i], "");
@@ -355,16 +355,16 @@ int main(int argc, const char* argv[])
     while (!bitmaps.empty())
     {
         if (optVerbose)
-            cout << "packing " << bitmaps.size() << " images..." << endl;
+            std::cout << "packing " << bitmaps.size() << " images..." << std::endl;
         auto packer = new Packer(optSize, optSize, optPadding);
         packer->Pack(bitmaps, optVerbose, optUnique, optRotate);
         packers.push_back(packer);
         if (optVerbose)
-            cout << "finished packing: " << name << to_string(packers.size() - 1) << " (" << packer->width << " x " << packer->height << ')' << endl;
+            std::cout << "finished packing: " << name << std::to_string(packers.size() - 1) << " (" << packer->width << " x " << packer->height << ')' << std::endl;
     
         if (packer->bitmaps.empty())
         {
-            cerr << "packing failed, could not fit bitmap: " << (bitmaps.back())->name << endl;
+            std::cerr << "packing failed, could not fit bitmap: " << (bitmaps.back())->name << std::endl;
             return EXIT_FAILURE;
         }
     }
@@ -373,20 +373,20 @@ int main(int argc, const char* argv[])
     for (size_t i = 0; i < packers.size(); ++i)
     {
         if (optVerbose)
-            cout << "writing png: " << outputDir << name << to_string(i) << ".png" << endl;
-        packers[i]->SavePng(outputDir + name + to_string(i) + ".png");
+            std::cout << "writing png: " << outputDir << name << std::to_string(i) << ".png" << std::endl;
+        packers[i]->SavePng(outputDir + name + std::to_string(i) + ".png");
     }
     
     //Save the atlas binary
     if (optBinary)
     {
         if (optVerbose)
-            cout << "writing bin: " << outputDir << name << ".bin" << endl;
+            std::cout << "writing bin: " << outputDir << name << ".bin" << std::endl;
         
-        ofstream bin(outputDir + name + ".bin", ios::binary);
+        std::ofstream bin(outputDir + name + ".bin", std::ios::binary);
         WriteShort(bin, (int16_t)packers.size());
         for (size_t i = 0; i < packers.size(); ++i)
-            packers[i]->SaveBin(name + to_string(i), bin, optTrim, optRotate);
+            packers[i]->SaveBin(name + std::to_string(i), bin, optTrim, optRotate);
         bin.close();
     }
     
@@ -394,12 +394,12 @@ int main(int argc, const char* argv[])
     if (optXml)
     {
         if (optVerbose)
-            cout << "writing xml: " << outputDir << name << ".xml" << endl;
+            std::cout << "writing xml: " << outputDir << name << ".xml" << std::endl;
         
-        ofstream xml(outputDir + name + ".xml");
-        xml << "<atlas>" << endl;
+        std::ofstream xml(outputDir + name + ".xml");
+        xml << "<atlas>" << std::endl;
         for (size_t i = 0; i < packers.size(); ++i)
-            packers[i]->SaveXml(name + to_string(i), xml, optTrim, optRotate);
+            packers[i]->SaveXml(name + std::to_string(i), xml, optTrim, optRotate);
         xml << "</atlas>";
     }
     
@@ -407,21 +407,21 @@ int main(int argc, const char* argv[])
     if (optJson)
     {
         if (optVerbose)
-            cout << "writing json: " << outputDir << name << ".json" << endl;
+            std::cout << "writing json: " << outputDir << name << ".json" << std::endl;
         
-        ofstream json(outputDir + name + ".json");
-        json << '{' << endl;
-        json << "\t\"textures\":[" << endl;
+        std::ofstream json(outputDir + name + ".json");
+        json << '{' << std::endl;
+        json << "\t\"textures\":[" << std::endl;
         for (size_t i = 0; i < packers.size(); ++i)
         {
-            json << "\t\t{" << endl;
-            packers[i]->SaveJson(name + to_string(i), json, optTrim, optRotate);
+            json << "\t\t{" << std::endl;
+            packers[i]->SaveJson(name + std::to_string(i), json, optTrim, optRotate);
             json << "\t\t}";
             if (i + 1 < packers.size())
                 json << ',';
-            json << endl;
+            json << std::endl;
         }
-        json << "\t]" << endl;
+        json << "\t]" << std::endl;
         json << '}';
     }
     

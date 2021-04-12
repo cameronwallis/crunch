@@ -31,7 +31,7 @@
 #include <iostream>
 #include <algorithm>
 
-using namespace std;
+//using namespace std;
 using namespace rbp;
 
 Packer::Packer(int width, int height, int pad)
@@ -40,7 +40,7 @@ Packer::Packer(int width, int height, int pad)
     
 }
 
-void Packer::Pack(vector<Bitmap*>& bitmaps, bool verbose, bool unique, bool rotate)
+void Packer::Pack(std::vector<Bitmap*>& bitmaps, bool verbose, bool unique, bool rotate)
 {
     MaxRectsBinPack packer(width, height);
     
@@ -51,7 +51,7 @@ void Packer::Pack(vector<Bitmap*>& bitmaps, bool verbose, bool unique, bool rota
         auto bitmap = bitmaps.back();
         
         if (verbose)
-            cout << '\t' << bitmaps.size() << ": " << bitmap->name << endl;
+            std::cout << '\t' << bitmaps.size() << ": " << bitmap->name << std::endl;
         
         //Check to see if this is a duplicate of an already packed bitmap
         if (unique)
@@ -89,8 +89,8 @@ void Packer::Pack(vector<Bitmap*>& bitmaps, bool verbose, bool unique, bool rota
             this->bitmaps.push_back(bitmap);
             bitmaps.pop_back();
             
-            ww = max(rect.x + rect.width, ww);
-            hh = max(rect.y + rect.height, hh);
+            ww = std::max(rect.x + rect.width, ww);
+            hh = std::max(rect.y + rect.height, hh);
         }
     }
     
@@ -100,7 +100,7 @@ void Packer::Pack(vector<Bitmap*>& bitmaps, bool verbose, bool unique, bool rota
         height /= 2;
 }
 
-void Packer::SavePng(const string& file)
+void Packer::SavePng(const std::string& file)
 {
     Bitmap bitmap(width, height);
     for (size_t i = 0, j = bitmaps.size(); i < j; ++i)
@@ -116,9 +116,9 @@ void Packer::SavePng(const string& file)
     bitmap.SaveAs(file);
 }
 
-void Packer::SaveXml(const string& name, ofstream& xml, bool trim, bool rotate)
+void Packer::SaveXml(const std::string& name, std::ofstream& xml, bool trim, bool rotate)
 {
-    xml << "\t<tex n=\"" << name << "\">" << endl;
+    xml << "\t<tex n=\"" << name << "\">" << std::endl;
     for (size_t i = 0, j = bitmaps.size(); i < j; ++i)
     {
         xml << "\t\t<img n=\"" << bitmaps[i]->name << "\" ";
@@ -135,12 +135,12 @@ void Packer::SaveXml(const string& name, ofstream& xml, bool trim, bool rotate)
         }
         if (rotate)
             xml << "r=\"" << (points[i].rot ? 1 : 0) << "\" ";
-        xml << "/>" << endl;
+        xml << "/>" << std::endl;
     }
-    xml << "\t</tex>" << endl;
+    xml << "\t</tex>" << std::endl;
 }
 
-void Packer::SaveBin(const string& name, ofstream& bin, bool trim, bool rotate)
+void Packer::SaveBin(const std::string& name, std::ofstream& bin, bool trim, bool rotate)
 {
     WriteString(bin, name);
     WriteShort(bin, (int16_t)bitmaps.size());
@@ -163,10 +163,10 @@ void Packer::SaveBin(const string& name, ofstream& bin, bool trim, bool rotate)
     }
 }
 
-void Packer::SaveJson(const string& name, ofstream& json, bool trim, bool rotate)
+void Packer::SaveJson(const std::string& name, std::ofstream& json, bool trim, bool rotate)
 {
-    json << "\t\t\t\"name\":\"" << name << "\"," << endl;
-    json << "\t\t\t\"images\":[" << endl;
+    json << "\t\t\t\"name\":\"" << name << "\"," << std::endl;
+    json << "\t\t\t\"images\":[" << std::endl;
     for (size_t i = 0, j = bitmaps.size(); i < j; ++i)
     {
         json << "\t\t\t\t{ ";
@@ -187,7 +187,7 @@ void Packer::SaveJson(const string& name, ofstream& json, bool trim, bool rotate
         json << " }";
         if(i != bitmaps.size() -1)
             json << ",";
-        json << endl;
+        json << std::endl;
     }
-    json << "\t\t\t]" << endl;
+    json << "\t\t\t]" << std::endl;
 }
