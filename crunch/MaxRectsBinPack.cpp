@@ -169,7 +169,7 @@ float MaxRectsBinPack::Occupancy() const
 	for(size_t i = 0; i < usedRectangles.size(); ++i)
 		usedSurfaceArea += usedRectangles[i].width * usedRectangles[i].height;
 
-	return (float)usedSurfaceArea / (binWidth * binHeight);
+	return static_cast<float>(usedSurfaceArea) / (binWidth * binHeight);
 }
 
 Rect MaxRectsBinPack::FindPositionForNewNodeBottomLeft(bool rot, int width, int height, int &bestY, int &bestX) const

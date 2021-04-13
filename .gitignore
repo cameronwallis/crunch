@@ -52,3 +52,4 @@ _deps
 build/
 
 .vscode/
+test_data/

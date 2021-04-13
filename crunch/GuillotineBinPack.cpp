@@ -374,7 +374,7 @@ float GuillotineBinPack::Occupancy() const
 	for(size_t i = 0; i < usedRectangles.size(); ++i)
 		usedSurfaceArea += usedRectangles[i].width * usedRectangles[i].height;
 
-	return (float)usedSurfaceArea / (binWidth * binHeight);
+	return static_cast<float>(usedSurfaceArea) / (binWidth * binHeight);
 }
 
 /// Returns the heuristic score value for placing a rectangle of size width*height into freeRect. Does not try to rotate.
